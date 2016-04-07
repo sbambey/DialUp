@@ -1,7 +1,5 @@
 Messages = new Mongo.Collection("msgs");
 
-
-
 if (Meteor.isServer) {
   // This code only runs on the server
   //emoji support
@@ -50,10 +48,11 @@ if (Meteor.isServer) {
     },
     //method for recieveing a message
     receiver: function(message) {
-      //console.log(message);
+      console.log(message);
       try {
         var parsed = JSON.parse(message);
       } catch(e) {
+        //console.log(e);
         parsed = JSON.parse("{\"a\":\"Message failed. JSON cannot be parsed.\", \"b\":\"System Message\"}");
       }   
       var entry = {messageText: parsed.a,

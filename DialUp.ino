@@ -19,7 +19,7 @@ unsigned int c = 0;
 
 String transfer_string = "";
 unsigned int transfer_string_len;
-char characters[400];
+char characters[600];
 
 unsigned long timeout;
 
@@ -66,14 +66,17 @@ void loop() {
   timeout = millis();
 
   while((PINB & B00000001) == current_signal) {
-
-    if((millis()-timeout) > TIMEOUT && shift_counter != 0 && active) {
+    
+    if((millis()-timeout) > TIMEOUT && active) {
       active = 0;
       shift_counter = 0;
-      multiplier = 0;
+      received = B00000000;
       rec = "";
-      !inhibit ? inhibit = 1 : inhibit = 0;
-      Serial.println("{\"a\":\"Message failed. Timeout reached.\", \"b\":\"System Message\"}");
+      Serial.print("{\"a\":\"Message failed. Transmission timed out. Timeout: ");
+      Serial.print(millis()-timeout);
+      Serial.println("\", \"b\":\"System Message\"}");
+      timeout = millis();
+      break;
     }
 
     if(Serial.available() > 0) {
@@ -86,6 +89,7 @@ void loop() {
         characters[c] = sread;
         c++;
       }
+      //timeout=millis();
     }
     
     if((PINB & B00000001) == 0 && shift_counter == 0  && rdy && !active) {
@@ -118,13 +122,8 @@ void loop() {
   }
   
   current_timestamp = micros();
-  
-  if(current_signal == 1) {
-    multiplier = ((current_timestamp-last_timestamp-CORRECTION_OFFSET)/CYCLE);
-  }
-  else {
-    multiplier = ((current_timestamp-last_timestamp+CORRECTION_OFFSET)/CYCLE);
-  }
+  multiplier = (((current_timestamp-last_timestamp)+HALF_CYCLE)/CYCLE);
+
   if(multiplier < 9) {
     for(int i=0; i<multiplier; i++) {
       received = received << 1;
@@ -133,23 +132,14 @@ void loop() {
       shift_counter++;
       
       if(!active && received == B11000101) {
-        if(!inhibit) {
-          active = 1;
-          shift_counter = 0;
-          Serial.println("{\"a\":\"Message start.\", \"b\":\"System Message\"}");
-          //Serial.println("Message start");
-        }
-        else {
-          inhibit = 0;
-        }
+        active = 1;
+        shift_counter = 0;
+        //Serial.println("{\"a\":\"Message start.\", \"b\":\"System Message\"}");
       }
       
       if(shift_counter == 8) {
-        //Serial.println(received);
         if(active && received == B11000101) {
           active = 0;
-          //rdy = 0;
-          //Serial.println("Message end");
           Serial.println(rec);
           rec = "";
         }
