@@ -1,3 +1,3 @@
 #define CYCLE 200
-#define HALF_CYCLE 100
-#define TIMEOUT 150
+#define HALF_CYCLE CYCLE/2
+#define TIMEOUT 10

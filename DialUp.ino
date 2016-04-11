@@ -12,13 +12,14 @@ unsigned int multiplier;
 String rec = "";
 bool rdy = 0;
 bool active = 0;
-bool inhibit = 0;
 
 byte sread;
 unsigned int c = 0;
 
 String transfer_string = "";
 unsigned int transfer_string_len;
+
+//585 characters works
 char characters[600];
 
 unsigned long timeout;
@@ -122,7 +123,7 @@ void loop() {
   }
   
   current_timestamp = micros();
-  multiplier = (((current_timestamp-last_timestamp)+HALF_CYCLE)/CYCLE);
+  multiplier = ((current_timestamp-last_timestamp)+HALF_CYCLE)/CYCLE;
 
   if(multiplier < 9) {
     for(int i=0; i<multiplier; i++) {
