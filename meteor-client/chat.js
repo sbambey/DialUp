@@ -9,10 +9,13 @@ if (Meteor.isServer) {
     return Emojis.find();
   });
   Meteor.publish("messages", function () {
-    return Messages.find({}, {sort: {createdAt: -1}, limit: 5});
+    return Messages.find({}, {sort: {createdAt: -1}, limit: 50, transform: function(doc) {
+      if(doc.message) doc.message = Meteor.call('urlify', doc.message)          
+        return doc;
+    }});
   });
   //parameters for serialPort
-  var serialPort = new SerialPort.SerialPort('/dev/cu.usbmodem1421', {
+  var serialPort = new SerialPort.SerialPort('COM5', {
     baudrate: 9600,
     parser: SerialPort.parsers.readline('\r\n')
   });
@@ -37,32 +40,39 @@ if (Meteor.isServer) {
       }
       var entryLite = {a: message, b: Meteor.user().username}
       var parsedData = JSON.stringify(entryLite);    
-      sendToSerialPort(parsedData);
-      var entry = {messageText: message,
+      sendToSerialPort(parsedData); 
+      var clickable = Meteor.call('urlify', message);
+      console.log(clickable)  ;
+      var entry = {messageText: clickable,
         createdAt: new Date(),
         username: Meteor.user().username};
       Messages.insert(entry);     
       console.log(entryLite);
-
-
     },
     //method for recieveing a message
     receiver: function(message) {
       console.log(message);
       try {
         var parsed = JSON.parse(message);
-      } catch(e) {
-        //console.log(e);
+      } catch(e) {        
         parsed = JSON.parse("{\"a\":\"Message failed. JSON cannot be parsed.\", \"b\":\"System Message\"}");
-      }   
-      var entry = {messageText: parsed.a,
+      }
+      var urlified = Meteor.call('urlify', parsed.a)   
+      var entry = {messageText: urlified,
         createdAt: new Date(),
         username: parsed.b};      
       Messages.insert(entry);
-    }
+    },
+    //method to urlify messages using regular expressions
+    urlify: function(text) {      
+      console.log("urlyifying");
+      var urlRegex = /[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi;
+      return text.replace(urlRegex, function(url) {
+          return '<a href="' + url + '" >' + url + '</a>';
+      })
+    }   
   });
 }
-
 
   
 /* scrolling code */
@@ -78,8 +88,7 @@ if (Meteor.isClient) {
   Template.body.helpers({
     recentMessages: function () {
       return Messages.find({}, {sort: {createdAt: 1}});
-    },
-    /* unread message helper */
+    }
   });
 
   /*chat window scrolling*/
