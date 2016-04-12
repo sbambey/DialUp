@@ -125,7 +125,7 @@ void loop() {
   current_timestamp = micros();
   multiplier = ((current_timestamp-last_timestamp)+HALF_CYCLE)/CYCLE;
 
-  if(multiplier < 9) {
+  if(multiplier < 30) {
     for(int i=0; i<multiplier; i++) {
       received = received << 1;
       received |= current_signal;
