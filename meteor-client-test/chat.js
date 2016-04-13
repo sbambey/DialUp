@@ -14,7 +14,7 @@ if (Meteor.isServer) {
     return Messages.find({}, {sort: {createdAt: -1}, limit: 5});
   });
   //parameters for serialPort
-  var serialPort = new SerialPort.SerialPort('/dev/cu.usbmodem1411', {
+  var serialPort = new SerialPort.SerialPort('/dev/cu.usbmodem1421', {
     baudrate: 9600,
     parser: SerialPort.parsers.readline('\r\n')
   });
