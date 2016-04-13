@@ -21,12 +21,12 @@ unsigned long timeout;              //Keeps track of timeout delays
 /*
  * delayCycle()
  * Accurate delay function for one CYCLE as set in config.
- * Required due to delay() or delayMircroseconds() not being accurate enough.
+ * Required due to delay() or delayMicroseconds() not being accurate enough.
  * 
  * Input: none
  */
 void delayCycle() {
-  unsigned int us = CYCLE;
+  uint16_t us = CYCLE;
   us <<= 2;
   __asm__ __volatile__ (
           "1: sbiw %0,1" "\n\t" // 2 cycles

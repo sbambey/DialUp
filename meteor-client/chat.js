@@ -15,7 +15,7 @@ if (Meteor.isServer) {
     }});
   });
   //parameters for serialPort
-  var serialPort = new SerialPort.SerialPort('COM5', {
+  var serialPort = new SerialPort.SerialPort('/dev/cu.usbmodem1411', {
     baudrate: 9600,
     parser: SerialPort.parsers.readline('\r\n')
   });
