@@ -86,6 +86,9 @@ form {
   background: white;
   overflow: scroll;
   word-wrap: break-word;
+  
+  /*position : relative;*/ 
+  /*bottom:200;*/
 }
 
 

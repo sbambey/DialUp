@@ -9,7 +9,7 @@ if (Meteor.isServer) {
     return Emojis.find();
   });
   Meteor.publish("messages", function () {
-    return Messages.find({}, {sort: {createdAt: -1}, limit: 50, transform: function(doc) {
+    return Messages.find({}, {sort: {createdAt: -1}, limit: 10, transform: function(doc) {
       if(doc.message) doc.message = Meteor.call('urlify', doc.message)          
         return doc;
     }});
@@ -38,6 +38,11 @@ if (Meteor.isServer) {
       if (! Meteor.userId()) {
         throw new Meteor.Error("not-authorized");
       }
+      var maxlength = 550;
+      //if message is longer than 550 it gets cut      
+      if (message.length > maxlength){
+        message = message.substring(0, maxlength);
+      }      
       var entryLite = {a: message, b: Meteor.user().username}
       var parsedData = JSON.stringify(entryLite);    
       sendToSerialPort(parsedData); 
@@ -66,9 +71,9 @@ if (Meteor.isServer) {
     //method to urlify messages using regular expressions
     urlify: function(text) {      
       console.log("urlyifying");
-      var urlRegex = /[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi;
+    var urlRegex =/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
       return text.replace(urlRegex, function(url) {
-          return '<a href="' + url + '" >' + url + '</a>';
+          return '<a href="' + url + '" target="_blank">' + url + '</a>';
       })
     }   
   });

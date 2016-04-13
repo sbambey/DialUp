@@ -1,5 +1,14 @@
 <head>
   <title>Dial Up Chat</title>
+  <body onload="scrolling()">
+  <script>
+  function scrolling(){
+    
+    var objDiv = document.getElementById("message-window");
+    console.log(objDiv.scrollHeight);
+    objDiv.scrollTop = objDiv.scrollHeight;
+  }
+</script>
 </head>
 
 <body>
