@@ -1,14 +1,5 @@
 <head>
   <title>Dial Up Chat</title>
-  <body onload="scrolling()">
-  <script>
-  function scrolling(){
-    
-    var objDiv = document.getElementById("message-window");
-    console.log(objDiv.scrollHeight);
-    objDiv.scrollTop = objDiv.scrollHeight;
-  }
-</script>
 </head>
 
 <body>
@@ -16,15 +7,13 @@
     <header>
       <h1>Meteor Chat</h1>
       <span title="smile" class="emoji">😄</span>
-
-      {{ ! A block of text. Works similar to the built-in Markdown block helper. }}
       {{#emoji}}
         now with emojis: :boom: :D
       {{/emoji}}
       {{> loginButtons}}
     </header>
     <!-- chat messages here -->
-    <ul class="message-window">
+    <ul class="message-window" id="message-window">
       {{#each recentMessages}}
        {{#emoji}}
           {{> message}}

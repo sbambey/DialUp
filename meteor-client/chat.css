@@ -39,9 +39,9 @@ footer {
   background-image: linear-gradient(to tos, #d0edf5, #b4dbff 100%);
   position: absolute;
   bottom: 0;
-  height: 85px;
+  height: 70px;
   box-sizing: border-box;
-  padding: 30px 15px 15px 15px;
+  padding: 15px 15px 15px 15px;
   width: 100%;
 }
 
@@ -55,12 +55,6 @@ h1 {
   margin-bottom: 10px;
   display: inline-block;
   margin-right: 1em;
-}
-
-form {
-  margin-top: -10px;
-  margin-bottom: 10px;
-  position: relative;
 }
 
 .new-message input {
@@ -77,7 +71,7 @@ form {
 
 .message-window {
   position: absolute;
-  top: 80px;
+  top: 85px;
   bottom: 70px;
   width: 100%;
   max-width: 600px;

@@ -1,13 +1,13 @@
 Messages = new Mongo.Collection("msgs");
 
+//This code only runs on the server
 if (Meteor.isServer) {
-  // This code only runs on the server
-  //emoji support
+
+  //Emoji support
   Meteor.publish('emojis', function() {
-    // Here you can choose to publish a subset of all emojis
-    // if you'd like to.
     return Emojis.find();
   });
+
   Meteor.publish("messages", function () {
     return Messages.find({}, {sort: {createdAt: -1}, limit: 10, transform: function(doc) {
       if(doc.message) doc.message = Meteor.call('urlify', doc.message)          
@@ -15,7 +15,7 @@ if (Meteor.isServer) {
     }});
   });
   //parameters for serialPort
-  var serialPort = new SerialPort.SerialPort('/dev/cu.usbmodem1411', {
+  var serialPort = new SerialPort.SerialPort('/dev/cu.usbmodem1421', {
     baudrate: 9600,
     parser: SerialPort.parsers.readline('\r\n')
   });
@@ -96,7 +96,14 @@ if (Meteor.isClient) {
     }
   });
 
-  /*chat window scrolling*/
+  Tracker.autorun(function() {
+    Messages.find().observeChanges({
+      added: function() {
+        var objDiv = document.getElementById("message-window");
+        objDiv.scrollTop = objDiv.scrollHeight;
+      }
+    });
+  });
 
   /*events*/
   Template.body.events({
@@ -107,12 +114,7 @@ if (Meteor.isClient) {
 
       event.target.text.value = "";
       event.preventDefault();
-    },
-
-    /* scroll event */
-    
-    /* more messages event */
-
+    }
   });
 
   /*account config*/
