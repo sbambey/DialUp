@@ -1,5 +1,10 @@
 Messages = new Mongo.Collection("msgs");
 
+Router.route('/', function () {
+  this.render('home');
+});
+Router.route('/chat');
+
 //This code only runs on the server
 if (Meteor.isServer) {
 
@@ -90,7 +95,7 @@ if (Meteor.isClient) {
   // This code only runs on the client
   Meteor.subscribe("messages");
   /* helper code */
-  Template.body.helpers({
+  Template.chat.helpers({
     recentMessages: function () {
       return Messages.find({}, {sort: {createdAt: 1}});
     }
@@ -106,7 +111,7 @@ if (Meteor.isClient) {
   });
 
   /*events*/
-  Template.body.events({
+  Template.chat.events({
     "submit .new-message": function (event) {
       var text = event.target.text.value;
 

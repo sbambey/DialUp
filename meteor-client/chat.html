@@ -1,8 +1,13 @@
-<head>
-  <title>Dial Up Chat</title>
-</head>
+<template name="home">
+  <div class="container">
+    <center>
+      <a class="btn btn-primary btn-enter" href="{{pathFor route='chat'}}">Enter Chat</a>
+      <p class="lead danger">Note: Laser will activate when sending messages.</p>
+    </center>
+  </div>
+</template>
 
-<body>
+<template name="chat">
   <div class="container">
     <header>
       <h1>Meteor Chat</h1>
@@ -29,7 +34,7 @@
       {{/if}}
     </footer>
   </div>
-</body>
+</template>
 
 <!-- message template here -->
 <template name="message">
