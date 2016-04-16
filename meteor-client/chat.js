@@ -20,7 +20,7 @@ if (Meteor.isServer) {
     }});
   });
   //parameters for serialPort
-  var serialPort = new SerialPort.SerialPort('/dev/cu.usbmodem1421', {
+  var serialPort = new SerialPort.SerialPort('/dev/cu.usbmodem1411', {
     baudrate: 9600,
     parser: SerialPort.parsers.readline('\r\n')
   });
@@ -61,7 +61,7 @@ if (Meteor.isServer) {
     },
     //method for recieveing a message
     receiver: function(message) {
-      console.log(message);
+      console.log("message");
       try {
         var parsed = JSON.parse(message);
       } catch(e) {        
@@ -76,7 +76,7 @@ if (Meteor.isServer) {
     //method to urlify messages using regular expressions
     urlify: function(text) {      
       console.log("urlyifying");
-    var urlRegex =/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+      var urlRegex =/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
       return text.replace(urlRegex, function(url) {
           return '<a href="' + url + '" target="_blank">' + url + '</a>';
       })
